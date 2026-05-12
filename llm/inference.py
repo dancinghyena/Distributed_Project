@@ -1,4 +1,6 @@
-from transformers import pipeline
+from transformers import pipeline, logging
+
+logging.set_verbosity_error()
 
 _pipe = pipeline("text-generation", model="sshleifer/tiny-gpt2")
 print("[LLM] Loaded sshleifer/tiny-gpt2 inference pipeline.")
@@ -12,6 +14,7 @@ def run_llm(query: str, context: str) -> str:
             max_new_tokens=40,
             do_sample=False,
             truncation=True,
+            pad_token_id=_pipe.tokenizer.eos_token_id,
         )
         if not out:
             return "No answer generated."

@@ -62,7 +62,8 @@ class LoadBalancer:
     def dispatch(self, request):
         """Dispatches the request to a worker. Reassigns if the chosen worker fails."""
         # Extra attempts help when workers are terminated mid-test under high concurrency.
-        max_retries = 15
+        # Increased to 60 to allow the slow HuggingFace CPU inference enough time to clear the queue.
+        max_retries = 60
         for _attempt in range(max_retries):
             worker = self.get_next_worker()
             try:
